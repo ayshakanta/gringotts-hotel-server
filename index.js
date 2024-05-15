@@ -31,7 +31,8 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
-    const roomCollection = client.db('gringotts').collection('rooms')
+    const roomCollection = client.db('gringotts').collection('rooms');
+    const bookingCollection = client.db('gringotts').collection('bookings')
 
 
     app.get('/rooms', async(req, res)=>{
@@ -44,6 +45,15 @@ async function run() {
         const id = req.params.id 
         const query = {_id: new ObjectId(id)}
         const result = await roomCollection.findOne(query)
+        res.send(result)
+    })
+
+    // bookings 
+
+    app.post('/bookings', async(req, res)=>{
+        const booking = req.body 
+        console.log(booking)
+        const result = await bookingCollection.insertOne(booking)
         res.send(result)
     })
 
