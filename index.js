@@ -98,6 +98,20 @@ async function run() {
         res.send(result)
     })
 
+    app.put('/bookings/:id', async(req, res)=>{
+        const id = req.params.id 
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert: true}
+        const updatedReview = req.body 
+        const review = {
+            $set:{
+                reviews: updatedReview.reviews 
+            }
+        }
+        const result = await roomCollection.updateOne(filter, review, options)
+        res.send(result)
+    })
+
     app.delete('/bookings/:id', async(req, res) =>{
         const id = req.params.id 
         const query = {_id: new ObjectId(id)}
