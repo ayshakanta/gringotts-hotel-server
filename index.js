@@ -6,11 +6,25 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
+app.use(
+    cors({
+      origin: [
+        "http://localhost:5173",
+        "https://cardoctor-bd.web.app",
+        "https://cardoctor-bd.firebaseapp.com",
+      ],
+      credentials: true,
+    })
+  );
+
 
 //middleware
 
 app.use(cors());
 app.use(express.json());
+
+
+
 
 
 
@@ -69,12 +83,32 @@ async function run() {
         res.send(result)
     })
 
+
+    app.put('/bookings/:id', async(req, res)=>{
+        const id = req.params.id 
+        const filter = {_id: new ObjectId(id)}
+        const options = {upsert: true}
+        const updatedBooking = req.body
+        const updatedDate = {
+            $set: {
+                date: updatedBooking.date
+            }
+        }
+        const result = await bookingCollection.updateOne(filter, updatedDate, options)
+        res.send(result)
+    })
+
     app.delete('/bookings/:id', async(req, res) =>{
         const id = req.params.id 
         const query = {_id: new ObjectId(id)}
         const result = await bookingCollection.deleteOne(query)
         res.send(result)
     })
+
+
+
+
+   
 
 
     // Send a ping to confirm a successful connection
